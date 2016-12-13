@@ -1,0 +1,25 @@
+package main
+
+
+type Parser Peg {
+    Calc
+}
+
+root <- expression +
+
+expression <- spacing  / peadoc /button/jump/other
+
+
+other <-  <(![\n\r] .)+>   {p.Echo(text)}
+
+peadoc <- '###' <(! '###' .)+> '###'  {p.Echo(text)}
+
+button <- <("- " (! spacing .)+ space '*' (! spacing .)+ newline )+> {p.Select(text)}
+
+jump <- "#jump" spacing + <"*" [a^zA-Z0-9]+> &spacing {p.Jump(text)}
+
+spacing <- space / newline
+
+space <-  " " / "\t"
+
+newline <- "\r" / "\n"
